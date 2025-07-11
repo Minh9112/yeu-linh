@@ -22,7 +22,7 @@
       color: white;
       font-size: 40px;
       font-weight: bold;
-      top: 46%;
+      top: 37%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-shadow: 2px 2px 4px #000;
@@ -74,7 +74,7 @@
   </audio>
 
   <script>
-    // Trái tim lớn
+    // Vẽ trái tim
     const canvas = document.getElementById("heartCanvas");
     const ctx = canvas.getContext("2d");
     ctx.translate(300, 300);
@@ -89,7 +89,7 @@
     ctx.fillStyle = "red";
     ctx.fill();
 
-    // Tim bay lên
+    // Tim bay
     function createFloatingHeart() {
       const heart = document.createElement("div");
       heart.className = "floating-heart";
