@@ -8,10 +8,6 @@
       margin: 0;
       background-color: #111;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       font-family: Arial, sans-serif;
     }
     canvas {
@@ -24,6 +20,9 @@
       color: white;
       font-size: 40px;
       font-weight: bold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
     .floating-heart {
       position: absolute;
@@ -41,28 +40,36 @@
         transform: translateY(-200px) scale(1.5);
       }
     }
-    iframe {
-      display: none; /* Ẩn video */
+    #playBtn {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
-  <!-- Canvas trái tim lớn -->
   <canvas id="heartCanvas" width="600" height="600"></canvas>
-
-  <!-- Chữ "Linh" -->
   <div id="heartText">Linh</div>
+  <button id="playBtn">Bật nhạc 💖</button>
 
-  <!-- Nhúng nhạc YouTube -->
-  <iframe
-    width="0"
-    height="0"
-    src="https://www.youtube.com/embed/NIJHqNWMtAw?autoplay=1&loop=1&playlist=NIJHqNWMtAw"
-    allow="autoplay"
-  ></iframe>
+  <!-- Audio (mp3 YouTube extract) -->
+  <audio id="bgMusic" loop>
+    <source src="https://docs.google.com/uc?export=download&id=1FV-oeu8NToMy98hZQvJUZBrmcsl2q9lC" type="audio/mp3" />
+    Trình duyệt của bạn không hỗ trợ audio.
+  </audio>
 
   <script>
-    // Vẽ trái tim lớn
+    // Vẽ trái tim
     const canvas = document.getElementById("heartCanvas");
     const ctx = canvas.getContext("2d");
     ctx.translate(300, 300);
@@ -77,13 +84,7 @@
     ctx.fillStyle = "red";
     ctx.fill();
 
-    // Chữ "Linh" ở giữa
-    const heartText = document.getElementById("heartText");
-    heartText.style.left = "50%";
-    heartText.style.top = "50%";
-    heartText.style.transform = "translate(-50%, -50%)";
-
-    // Tạo trái tim nhỏ bay lên
+    // Hiệu ứng trái tim bay
     function createFloatingHeart() {
       const heart = document.createElement("div");
       heart.className = "floating-heart";
@@ -100,6 +101,14 @@
     }
 
     setInterval(createFloatingHeart, 300);
+
+    // Bật nhạc khi bấm nút
+    const playBtn = document.getElementById("playBtn");
+    const bgMusic = document.getElementById("bgMusic");
+    playBtn.addEventListener("click", () => {
+      bgMusic.play();
+      playBtn.style.display = "none";
+    });
   </script>
 </body>
 </html>
