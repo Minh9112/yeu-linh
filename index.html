@@ -62,9 +62,9 @@
   <div id="heartText">Linh</div>
   <button id="playBtn">Bật nhạc 💖</button>
 
-  <!-- Audio (mp3 YouTube extract) -->
+  <!-- Nhạc nền -->
   <audio id="bgMusic" loop>
-    <source src="https://docs.google.com/uc?export=download&id=1FV-oeu8NToMy98hZQvJUZBrmcsl2q9lC" type="audio/mp3" />
+    <source src="https://minhgpt.github.io/files/yeu-linh.mp3" type="audio/mpeg">
     Trình duyệt của bạn không hỗ trợ audio.
   </audio>
 
@@ -84,7 +84,7 @@
     ctx.fillStyle = "red";
     ctx.fill();
 
-    // Hiệu ứng trái tim bay
+    // Trái tim bay lên
     function createFloatingHeart() {
       const heart = document.createElement("div");
       heart.className = "floating-heart";
@@ -94,15 +94,11 @@
       heart.style.fontSize = Math.random() * 20 + 15 + "px";
       heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
       document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 4000);
+      setTimeout(() => heart.remove(), 4000);
     }
-
     setInterval(createFloatingHeart, 300);
 
-    // Bật nhạc khi bấm nút
+    // Nút phát nhạc
     const playBtn = document.getElementById("playBtn");
     const bgMusic = document.getElementById("bgMusic");
     playBtn.addEventListener("click", () => {
