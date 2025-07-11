@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <title>Trái Tim Linh ❤️</title>
@@ -10,26 +10,31 @@
       overflow: hidden;
       font-family: Arial, sans-serif;
     }
+
     canvas {
       position: absolute;
       z-index: 1;
     }
+
     #heartText {
       position: absolute;
       z-index: 2;
       color: white;
       font-size: 40px;
       font-weight: bold;
-      top: 50%;
+      top: 46%;
       left: 50%;
       transform: translate(-50%, -50%);
+      text-shadow: 2px 2px 4px #000;
     }
+
     .floating-heart {
       position: absolute;
       color: red;
       animation: float 4s linear infinite;
       font-size: 20px;
     }
+
     @keyframes float {
       0% {
         opacity: 1;
@@ -40,36 +45,36 @@
         transform: translateY(-200px) scale(1.5);
       }
     }
-    #playBtn {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: white;
-      color: black;
-      padding: 10px 20px;
-      border: none;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 10;
+
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: #fff;
+      font-size: 1em;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      z-index: 3;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
     }
   </style>
 </head>
 <body>
   <canvas id="heartCanvas" width="600" height="600"></canvas>
   <div id="heartText">Linh</div>
-  <button id="playBtn">Bật nhạc 💖</button>
 
-  <!-- Nhạc nền -->
-  <audio id="bgMusic" loop>
+  <!-- Nhạc tự động phát -->
+  <audio id="bgMusic" autoplay loop>
     <source src="https://minhgpt.github.io/files/yeu-linh.mp3" type="audio/mpeg">
-    Trình duyệt của bạn không hỗ trợ audio.
+    Trình duyệt của bạn không hỗ trợ phát nhạc.
   </audio>
 
   <script>
-    // Vẽ trái tim
+    // Trái tim lớn
     const canvas = document.getElementById("heartCanvas");
     const ctx = canvas.getContext("2d");
     ctx.translate(300, 300);
@@ -84,7 +89,7 @@
     ctx.fillStyle = "red";
     ctx.fill();
 
-    // Trái tim bay lên
+    // Tim bay lên
     function createFloatingHeart() {
       const heart = document.createElement("div");
       heart.className = "floating-heart";
@@ -98,13 +103,18 @@
     }
     setInterval(createFloatingHeart, 300);
 
-    // Nút phát nhạc
-    const playBtn = document.getElementById("playBtn");
-    const bgMusic = document.getElementById("bgMusic");
-    playBtn.addEventListener("click", () => {
-      bgMusic.play();
-      playBtn.style.display = "none";
-    });
+    // Tuyết rơi
+    function createSnowflake() {
+      const snowflake = document.createElement("div");
+      snowflake.className = "snowflake";
+      snowflake.innerHTML = "❄️";
+      snowflake.style.left = Math.random() * window.innerWidth + "px";
+      snowflake.style.animationDuration = (Math.random() * 5 + 5) + "s";
+      snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
+      document.body.appendChild(snowflake);
+      setTimeout(() => snowflake.remove(), 10000);
+    }
+    setInterval(createSnowflake, 200);
   </script>
 </body>
 </html>
