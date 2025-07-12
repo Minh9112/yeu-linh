@@ -1,127 +1,111 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <title>Trái Tim Linh ❤️</title>
-  <style>
-    body {
-      margin: 0;
-      background-color: #111;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
-    canvas {
-      position: absolute;
-      z-index: 1;
-    }
-    #heartText {
-      position: absolute;
-      z-index: 2;
-      color: white;
-      font-size: 48px;
-      font-weight: bold;
-      top: 28%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: glow 2s infinite ease-in-out;
-    }
-    /* Hiệu ứng ánh sáng ánh neon */
-    @keyframes glow {
-      0%,100% {
-        text-shadow: 0 0 5px #fff, 0 0 10px #ff4da6, 0 0 15px #ff4da6;
-      }
-      50% {
-        text-shadow: 0 0 10px #fff, 0 0 20px #ff1ac6, 0 0 30px #ff1ac6;
-      }
-    }
-    .floating-heart { /* hiệu ứng tim bay */
-      position: absolute;
-      color: red;
-      animation: float 4s linear infinite;
-      font-size: 20px;
-    }
-    @keyframes float {
-      from { opacity: 1; transform: translateY(0) scale(1); }
-      to   { opacity: 0; transform: translateY(-200px) scale(1.5); }
-    }
-    .snowflake { /* hiệu ứng tuyết rơi */
-      position: fixed;
-      top: -10px;
-      color: #fff;
-      font-size: 1em;
-      animation: fall linear infinite;
-      z-index: 3;
-    }
-    @keyframes fall {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(100vh); opacity: 0; }
-    }
+<script>
+  const canvas = document.getElementById("heartCanvas");
+  const ctx = canvas.getContext("2d");
 
-    /* 👇 CSS từ ảnh: chữ "I ❤️ You" ở đầu trang */
-    .info {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 20px;
-      text-align: center;
-      pointer-events: none;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-    }
-  </style>
-</head>
-<body>
-  <div class="info">I ❤️ You</div> <!-- thêm dòng này -->
-  <canvas id="heartCanvas" width="600" height="600"></canvas>
-  <div id="heartText">Linh</div>
+  const particles = [];
 
-  <!-- Nhạc tự động phát -->
-  <audio id="bgMusic" autoplay loop>
-    <source src="https://minhgpt.github.io/files/yeu-linh.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    // Vẽ trái tim
-    const canvas = document.getElementById("heartCanvas");
-    const ctx = canvas.getContext("2d");
-    ctx.translate(300,300);
+  function drawHeartPath() {
     ctx.beginPath();
-    for(let t=0;t<=2*Math.PI;t+=0.01){
-      let x=16*Math.pow(Math.sin(t),3);
-      let y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
+    for(let t=0; t<=2*Math.PI; t+=0.01){
+      let x = 16 * Math.pow(Math.sin(t),3);
+      let y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
       ctx.lineTo(x*15, -y*15);
     }
     ctx.closePath();
-    ctx.fillStyle='red';
+  }
+
+  function drawHeart() {
+    ctx.save();
+    ctx.translate(300, 300);
+    ctx.fillStyle = 'red';
+    drawHeartPath();
     ctx.fill();
+    ctx.restore();
+  }
 
-    // Tim bay
-    function createFloatingHeart(){
-      const heart=document.createElement("div");
-      heart.className="floating-heart";
-      heart.innerText="❤️";
-      heart.style.left=Math.random()*100+'vw';
-      heart.style.bottom='0px';
-      heart.style.fontSize=(Math.random()*20+15)+'px';
-      heart.style.animationDuration=(Math.random()*2+3)+'s';
-      document.body.appendChild(heart);
-      setTimeout(()=>heart.remove(),4000);
+  function createParticles(x, y) {
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x, y,
+        radius: Math.random() * 4 + 1,
+        dx: (Math.random() - 0.5) * 8,
+        dy: (Math.random() - 0.5) * 8,
+        alpha: 1,
+        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+      });
     }
-    setInterval(createFloatingHeart,300);
+  }
 
-    // Tuyết rơi
-    function createSnowflake(){
-      const s=document.createElement("div");
-      s.className="snowflake";
-      s.innerHTML="❄️";
-      s.style.left=Math.random()*window.innerWidth+'px';
-      s.style.animationDuration=(Math.random()*5+5)+'s';
-      s.style.fontSize=(Math.random()*10+10)+'px';
-      document.body.appendChild(s);
-      setTimeout(()=>s.remove(),10000);
+  function updateParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.dx;
+      p.y += p.dy;
+      p.alpha -= 0.01;
+      if (p.alpha <= 0) {
+        particles.splice(i, 1);
+      }
     }
-    setInterval(createSnowflake,200);
-  </script>
-</body>
-</html>
+  }
+
+  function drawParticles() {
+    for (const p of particles) {
+      ctx.globalAlpha = p.alpha;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawHeart();
+    updateParticles();
+    drawParticles();
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  // Hiệu ứng khi click vào tim
+  canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+    const centerX = 300;
+    const centerY = 300;
+    const dist = Math.hypot(clickX - centerX, clickY - centerY);
+    if (dist < 100) {
+      createParticles(centerX, centerY);
+    }
+  });
+
+  // Tim bay
+  function createFloatingHeart(){
+    const heart=document.createElement("div");
+    heart.className="floating-heart";
+    heart.innerText="❤️";
+    heart.style.left=Math.random()*100+'vw';
+    heart.style.bottom='0px';
+    heart.style.fontSize=(Math.random()*20+15)+'px';
+    heart.style.animationDuration=(Math.random()*2+3)+'s';
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),4000);
+  }
+  setInterval(createFloatingHeart,300);
+
+  // Tuyết rơi
+  function createSnowflake(){
+    const s=document.createElement("div");
+    s.className="snowflake";
+    s.innerHTML="❄️";
+    s.style.left=Math.random()*window.innerWidth+'px';
+    s.style.animationDuration=(Math.random()*5+5)+'s';
+    s.style.fontSize=(Math.random()*10+10)+'px';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),10000);
+  }
+  setInterval(createSnowflake,200);
+</script>
